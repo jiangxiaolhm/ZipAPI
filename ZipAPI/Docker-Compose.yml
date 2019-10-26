@@ -1,0 +1,19 @@
+﻿version: "3"
+services:
+  zip-api:
+    build:
+      context: ../
+      dockerfile: ZipAPI/Dockerfile
+    environment:
+      DBServer: 'ms-sql-server'
+    ports:
+      - '8000:80'
+    depends_on:
+      - ms-sql-server
+  ms-sql-server:
+    image: mcr.microsoft.com/mssql/server:latest
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: 'P@ssword1'
+    ports:
+      - '1433:1433'
