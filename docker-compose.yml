@@ -1,13 +1,13 @@
-﻿version: "3"
+version: '3.4'
+
 services:
-  zip-api:
+  zipapi:
+    image: ${DOCKER_REGISTRY-}zipapi
     build:
-      context: ../
+      context: .
       dockerfile: ZipAPI/Dockerfile
     environment:
       DBServer: 'ms-sql-server'
-    ports:
-      - '8000:80'
     depends_on:
       - ms-sql-server
   ms-sql-server:
