@@ -20,8 +20,7 @@ namespace ZipAPI.Data
         public static void SeedData(ZipDbContext context)
         {
             Console.WriteLine("Appling Migrations...");
-            //context.Database.EnsureDeleted();
-            context.Database.Migrate();
+            context.Database.EnsureCreated();
 
             if (!context.Users.Any() && !context.Accounts.Any())
             {
