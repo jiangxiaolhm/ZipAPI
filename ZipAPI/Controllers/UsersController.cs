@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ZipAPI.Data;
 using ZipAPI.Models;
+using ZipAPI.ViewModels;
 
 namespace ZipAPI.Controllers
 {
@@ -15,20 +17,21 @@ namespace ZipAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ZipDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UsersController(ZipDbContext context)
+        public UsersController(ZipDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Users
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
-            var result = _context.Users
+            return _context.Users
                 .Include(user => user.Account)
                 .ToList();
-            return result;
         }
 
         // GET: api/Users/5
@@ -51,15 +54,21 @@ namespace ZipAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(UserPostDTO userPost)
         {
-            _context.Users.Add(user);
+            var user = _mapper.Map<User>(userPost);
             try
             {
+                _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-            } catch (DbUpdateException ex)
+            }
+            catch (DbUpdateException)
             {
-                return BadRequest(ex.InnerException.Message);
+                return BadRequest("The email address must be unique.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);

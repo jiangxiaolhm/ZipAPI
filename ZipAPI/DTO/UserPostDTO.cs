@@ -13,6 +13,7 @@ namespace ZipAPI.ViewModels
         public string Name { get; set; }
         [Required]
         [MaxLength(100)]
+        [EmailAddress]
         public string EmailAddress { get; set; }
         [Required]
         [Range(0D, Double.PositiveInfinity)]
