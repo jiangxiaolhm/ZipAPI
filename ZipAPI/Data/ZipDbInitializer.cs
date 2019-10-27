@@ -20,15 +20,38 @@ namespace ZipAPI.Data
         public static void SeedData(ZipDbContext context)
         {
             Console.WriteLine("Appling Migrations...");
-            context.Database.EnsureDeleted();
+            //context.Database.EnsureDeleted();
             context.Database.Migrate();
 
-            Console.WriteLine("Seeding Database...");
-            var user = new User { Name = "Eric Lin", EmailAddress = "jiangxiao.lhm@gmail.com", MonthlySalary = 2000, MonthlyExpenses = 1000 };
-            var account = new Account { User = user };
-            context.Add<User>(user);
-            context.Add<Account>(account);
-            context.SaveChanges();
+            if (!context.Users.Any() && !context.Accounts.Any())
+            {
+                Console.WriteLine("Seeding Database...");
+                context.AddRange(new User
+                {
+                    Name = "User A",
+                    EmailAddress = "usera@email.com",
+                    MonthlySalary = 2000,
+                    MonthlyExpenses = 1000,
+                    Account = new Account()
+                }, new User
+                {
+                    Name = "User B",
+                    EmailAddress = "userb@email.com",
+                    MonthlySalary = 2000,
+                    MonthlyExpenses = 1500,
+                }, new User
+                {
+                    Name = "User C",
+                    EmailAddress = "userc@email.com",
+                    MonthlySalary = 2000,
+                    MonthlyExpenses = 500,
+                });
+                context.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine("Already have data - not seeding.");
+            }
         }
     }
 }
