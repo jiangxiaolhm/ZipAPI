@@ -54,7 +54,13 @@ namespace ZipAPI.Controllers
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateException ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
