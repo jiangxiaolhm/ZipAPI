@@ -20,6 +20,7 @@ namespace ZipAPI.Models
         [Required]
         [Column(TypeName = "Money")]
         public decimal MonthlyExpenses { get; set; }
+
         public Account Account { get; set; }
     }
 }

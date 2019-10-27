@@ -10,8 +10,8 @@ namespace ZipAPI.Models
     public class Account
     {
         public int Id { get; set; }
-        [Required]
-        [ForeignKey("UserId")]
+        
+        public int UserId { get; set; }
         public User User { get; set; }
     }
 }
